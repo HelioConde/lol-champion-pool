@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#071018">
+  <meta name="description" content="LoL Champion Pool transforma seu histórico recente em um pool pessoal de campeões por função, frequência e desempenho observável.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="LoL Champion Pool — seu pool baseado no seu histórico">
+  <meta property="og:description" content="Veja seus campeões mais usados, função principal, consistência e monte um pool pessoal salvo no navegador.">
+  <meta property="og:url" content="https://helioconde.github.io/lol-champion-pool/">
+  <link rel="canonical" href="https://helioconde.github.io/lol-champion-pool/">
+  <title>LoL Champion Pool — seu pool baseado no seu histórico</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./"><span class="brand-mark">CP</span><span>Champion <b>Pool</b></span></a>
+    <div class="top-actions">
+      <span class="source-pill" id="source-pill">DADOS RIOT</span>
+      <button class="ghost small" id="language-toggle" type="button" aria-label="Mudar idioma">EN</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero shell">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="eyebrow">LEAGUE OF LEGENDS · POOL PESSOAL</p>
+        <h1 data-i18n="heroTitle">Menos “qual campeão é meta?”. <span>Mais “com quem eu realmente jogo?”.</span></h1>
+        <p data-i18n="heroText">Use seu histórico recente para descobrir quais campeões já fazem parte do seu jogo, em quais funções aparecem e quais escolhas merecem formar seu pool principal.</p>
+
+        <form class="lookup" id="lookup-form">
+          <label class="riot-field"><span data-i18n="riotId">Riot ID</span><input id="riot-id" placeholder="Nome#TAG" autocomplete="off" required></label>
+          <label><span data-i18n="server">Servidor</span>
+            <select id="server">
+              <option value="br1">BR</option><option value="na1">NA</option><option value="euw1">EUW</option>
+              <option value="eun1">EUNE</option><option value="kr">KR</option><option value="jp1">JP</option>
+              <option value="la1">LAN</option><option value="la2">LAS</option><option value="oc1">OCE</option>
+            </select>
+          </label>
+          <button class="primary" type="submit" data-i18n="analyze">Montar meu pool</button>
+        </form>
+
+        <div class="lookup-meta">
+          <span data-i18n="privacy">Consulta pública via backend gamer. Nenhuma chave Riot fica no navegador.</span>
+          <button class="text-button" id="recent-toggle" type="button" data-i18n="recent">Buscas recentes</button>
+        </div>
+        <div id="recent-searches" class="recent-searches" hidden></div>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </div>
+
+      <aside class="hero-card">
+        <p class="eyebrow" data-i18n="poolLogic">COMO O POOL É LIDO</p>
+        <div class="logic-preview">
+          <article><span>01</span><div><strong data-i18n="logic1">Familiaridade</strong><small data-i18n="logic1Text">Quantas partidas recentes você realmente jogou.</small></div></article>
+          <article><span>02</span><div><strong data-i18n="logic2">Função</strong><small data-i18n="logic2Text">Onde cada campeão aparece no seu histórico.</small></div></article>
+          <article><span>03</span><div><strong data-i18n="logic3">Sinal de desempenho</strong><small data-i18n="logic3Text">KDA e resultados da amostra, sem prometer winrate futuro.</small></div></article>
+        </div>
+      </aside>
+    </section>
+
+    <section id="loading" class="loading shell" hidden><div class="spinner"></div><div><strong data-i18n="loadingTitle">Lendo suas partidas recentes…</strong><span data-i18n="loadingText">A primeira consulta pode usar cache e carregar partidas em etapas.</span></div></section>
+
+    <section id="result" class="result shell" hidden>
+      <div class="result-head">
+        <div><p class="eyebrow" data-i18n="analysis">SEU POOL RECENTE</p><h2 id="player-name">—</h2><p id="sample-note" class="muted"></p></div>
+        <div class="role-tabs" role="group" aria-label="Função">
+          <button class="role active" type="button" data-role="ALL" data-i18n="all">Todos</button>
+          <button class="role" type="button" data-role="TOP">Top</button>
+          <button class="role" type="button" data-role="JUNGLE">Jungle</button>
+          <button class="role" type="button" data-role="MID">Mid</button>
+          <button class="role" type="button" data-role="ADC">ADC</button>
+          <button class="role" type="button" data-role="SUPPORT">Support</button>
+        </div>
+      </div>
+
+      <section class="metrics">
+        <article><span data-i18n="sampleGames">Partidas</span><strong id="metric-games">—</strong><small data-i18n="sampleGamesHelp">amostra analisada</small></article>
+        <article><span data-i18n="uniqueChamps">Campeões</span><strong id="metric-champs">—</strong><small data-i18n="uniqueChampsHelp">escolhas diferentes</small></article>
+        <article><span data-i18n="mainRole">Função principal</span><strong id="metric-role">—</strong><small data-i18n="mainRoleHelp">mais frequente</small></article>
+        <article><span data-i18n="poolSize">Pool salvo</span><strong id="metric-pool">0/5</strong><small data-i18n="poolSizeHelp">máximo recomendado no MVP</small></article>
+      </section>
+
+      <section class="content-grid">
+        <section class="panel suggestions-panel">
+          <div class="panel-head">
+            <div><p class="eyebrow" data-i18n="suggestedEyebrow">HISTÓRICO RECENTE</p><h3 data-i18n="suggestedTitle">Campeões que já fazem parte do seu jogo</h3></div>
+            <div class="sort-group">
+              <button class="sort active" type="button" data-sort="score" data-i18n="sortSignal">Sinal</button>
+              <button class="sort" type="button" data-sort="games" data-i18n="sortGames">Partidas</button>
+              <button class="sort" type="button" data-sort="kda">KDA</button>
+            </div>
+          </div>
+          <div id="champion-grid" class="champion-grid"></div>
+        </section>
+
+        <aside class="panel pool-panel">
+          <div class="panel-head"><div><p class="eyebrow" data-i18n="myPoolEyebrow">MEU POOL</p><h3 data-i18n="myPoolTitle">Até 5 escolhas para focar</h3></div><button class="text-button danger" id="clear-pool" type="button" data-i18n="clearPool">Limpar</button></div>
+          <div id="saved-pool" class="saved-pool"></div>
+          <div id="coverage" class="coverage"></div>
+          <div class="ad-slot"><span data-i18n="ad">PUBLICIDADE</span><small data-i18n="adNote">espaço reservado · fora dos botões do pool</small></div>
+        </aside>
+      </section>
+
+      <section class="panel detail-panel">
+        <div class="panel-head">
+          <div><p class="eyebrow" data-i18n="detailEyebrow">DETALHE</p><h3 id="detail-title" data-i18n="selectChampion">Escolha um campeão</h3></div>
+          <span id="detail-role" class="role-pill"></span>
+        </div>
+        <div id="detail-content" class="detail-content empty"></div>
+      </section>
+
+      <section class="method">
+        <div><p class="eyebrow" data-i18n="methodEyebrow">COMO LER</p><h3 data-i18n="methodTitle">Pool pessoal não é tier list.</h3></div>
+        <p data-i18n="methodText">O sinal combina volume recente, KDA e resultado na sua própria amostra. Ele ajuda a ordenar familiaridade observável, mas não prevê vitória futura nem substitui matchup, patch, composição ou preferência.</p>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer shell">
+    <div><strong>LoL Champion Pool</strong><span data-i18n="riotDisclaimer">Produto independente. League of Legends e Riot Games são marcas da Riot Games, Inc.</span></div>
+    <nav><a href="sobre.html" data-i18n="about">Sobre</a><a href="privacidade.html" data-i18n="privacyLink">Privacidade</a><a href="termos.html" data-i18n="terms">Termos</a></nav>
+  </footer>
+
+  <script src="backend-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
