@@ -1,5 +1,15 @@
 # LoL Champion Pool
 
+**Descubra quais campeões aparecem com mais frequência e consistência no seu histórico recente — e monte um pool pessoal de até cinco escolhas.**
+
+**O fluxo:** informe Riot ID, explore indicadores por campeão e função, filtre resultados e salve seu pool no dispositivo.
+
+> O sinal pessoal não é uma tier list nem prevê o resultado de partidas futuras. Estatísticas dependem da amostra recente disponibilizada pelo backend.
+
+![Status](https://img.shields.io/badge/status-em%20evolução-64748b)
+
+---
+
 Produto League of Legends do **Ideias IA Lab** para montar um pool pessoal a partir do histórico recente real do jogador.
 
 ## Estado atual
