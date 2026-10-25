@@ -1,120 +1,48 @@
-# LoL Champion Pool
+<div align="center">
+  <h1>🎯 LoL Champion Pool</h1>
+  <p><strong>Monte um pool de até cinco campeões com base no seu histórico recente de League of Legends.</strong></p>
+  <p><img alt="Status" src="https://img.shields.io/badge/status-MVP%20em%20valida%C3%A7%C3%A3o-64748b"> <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-Web-F7DF1E?logo=javascript&logoColor=black"></p>
+</div>
 
-**Descubra quais campeões aparecem com mais frequência e consistência no seu histórico recente — e monte um pool pessoal de até cinco escolhas.**
+## Como funciona
 
-**O fluxo:** informe Riot ID, explore indicadores por campeão e função, filtre resultados e salve seu pool no dispositivo.
+Pesquise por **Riot ID** e região para examinar campeões jogados, frequência, funções e desempenho observado. Depois escolha um grupo de até **cinco campeões** que você quer desenvolver.
 
-> O sinal pessoal não é uma tier list nem prevê o resultado de partidas futuras. Estatísticas dependem da amostra recente disponibilizada pelo backend.
+| Métrica | Uso |
+| --- | --- |
+| Partidas e vitórias | Volume e resultados recentes |
+| KDA médio | Indicador descritivo da amostra |
+| Dano/minuto | Contexto adicional de desempenho |
+| Funções | Top, Jungle, Mid, ADC e Support |
+| Sinal pessoal 0–100 | Pontuação relativa baseada em volume, KDA e resultado |
+| Pool manual | Até cinco campeões, salvo no navegador |
 
-![Status](https://img.shields.io/badge/status-em%20evolução-64748b)
+**O sinal pessoal não é uma tier list** e não prevê vitória. A comparação não considera todos os fatores de uma partida, como matchup, patch, composição e adversários.
 
----
+## Dados e privacidade
 
-Produto League of Legends do **Ideias IA Lab** para montar um pool pessoal a partir do histórico recente real do jogador.
+A aplicação consulta o endpoint `public-lol-profile` por meio do backend gamer. O backend pode trabalhar com **até 100 partidas recentes**, com foco nas modalidades previstas, mas o tamanho real da amostra varia. A chave Riot permanece no servidor.
 
-## Estado atual
+O pool salvo e as buscas recentes usam `localStorage`; limpar o navegador pode apagar essas escolhas.
 
-MVP funcional iniciado em 07/10/2026.
+## Executar localmente
 
-## O que já funciona
+```bash
+git clone https://github.com/HelioConde/lol-champion-pool.git
+cd lol-champion-pool
+python -m http.server 8000
+```
 
-- busca por Riot ID + servidor;
-- backend gamer compartilhado via `public-lol-profile`;
-- até 100 partidas recentes consultadas pelo backend;
-- recorte focado em Summoner's Rift (Ranked/Normal);
-- agregação por campeão;
-- função principal e funções observadas;
-- partidas, vitórias, win rate, KDA médio e dano/min;
-- sinal pessoal 0–100 baseado em volume recente + KDA + resultado da própria amostra;
-- filtros por Top, Jungle, Mid, ADC e Support;
-- ordenação por sinal, partidas e KDA;
-- pool manual de até 5 campeões salvo por perfil;
-- cobertura de funções do pool salvo;
-- buscas recentes em localStorage;
-- deep link com Riot ID + servidor;
-- PT-BR principal + inglês;
-- mobile;
-- páginas Sobre, Privacidade e Termos;
-- SEO básico;
-- espaço preparado para anúncios;
-- Static QA.
+Abra `http://localhost:8000`. Para verificações automatizadas:
 
-## Interpretação
+```bash
+npm install
+npm run check
+npm run test:e2e
+```
 
-O sinal pessoal **não é tier list** e **não prevê vitória futura**.
+Os testes dependem de Playwright configurado. A execução do frontend não garante disponibilidade do backend Riot.
 
-Ele só ordena familiaridade observável na amostra recente combinando:
+**Estado:** MVP implementado e em validação. Experimentos de IA, rankings globais ou novas funções devem vir depois de QA e feedback.
 
-- volume de partidas;
-- KDA;
-- resultado recente.
-
-Matchup, patch, composição, adversários e preferência continuam fora desse número.
-
-## Backend
-
-Fonte:
-
-`https://bieihhaobdztjyoweewa.supabase.co/functions/v1/public-lol-profile`
-
-A chave Riot permanece server-side.
-
-## QA
-
-Execute:
-
-`npm run check`
-
-## Deploy
-
-O workflow **Deploy GitHub Pages** está preparado.
-
-Caso o Pages ainda não esteja habilitado:
-
-1. Settings → Pages
-2. Build and deployment
-3. Source → GitHub Actions
-
-## Gate antes de expandir
-
-- [x] proposta de valor clara;
-- [x] dados Riot reais;
-- [x] agregação por campeão;
-- [x] filtro por função;
-- [x] pool salvo;
-- [x] PT-BR/EN;
-- [x] mobile;
-- [x] páginas institucionais;
-- [x] QA estático;
-- [ ] GitHub Pages confirmado;
-- [x] Browser E2E;
-- [ ] validar com 3+ Riot IDs/regiões;
-- [ ] validar contas com pouco histórico;
-- [ ] validar Top/Jungle/Mid/ADC/Support separadamente;
-- [ ] revisar 404/429/timeout;
-- [ ] revisar desktop/mobile publicado.
-
-
-> Browser E2E automatizado no GitHub Actions foi adicionado em 07/10/2026. O que resta neste gate é validação publicada/real e revisão dos casos específicos listados abaixo.
-
-> Smoke de produção foi adicionado em 07/10/2026 para validar a integração externa sem misturar esse gate ao E2E mockado. O workflow precisa ficar verde antes de encerrar o MVP.
-
-## V2 — somente após validação
-
-- comparação entre pool atual e patch anterior;
-- integração com mastery histórica;
-- recomendação de pool complementar por função;
-- cards compartilháveis;
-- histórico persistente do pool;
-- comparação entre dois pools;
-- filtros por fila e patch.
-
-## Compliance
-
-Produto independente e não endossado pela Riot Games.
-
-League of Legends e Riot Games são marcas de seus respectivos titulares.
-
-Planejamento geral:
-
-https://github.com/HelioConde/ideias-ia-lab
+Projeto independente, não oficial, não afiliado à Riot Games. Criado por [Hélio Conde](https://github.com/HelioConde).
